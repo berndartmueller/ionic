@@ -26,6 +26,7 @@
     this.dragThresholdX = opts.dragThresholdX || 10;
     this.el = opts.el;
     this.canSwipe = opts.canSwipe;
+    this.scrollView = opts.scrollView;
   };
 
   SlideDrag.prototype = new DragOp();
@@ -36,7 +37,7 @@
     if (!this.canSwipe()) {
       return;
     }
-
+    
     if (e.target.classList.contains(ITEM_CONTENT_CLASS)) {
       content = e.target;
     } else if (e.target.classList.contains(ITEM_CLASS)) {
@@ -114,6 +115,9 @@
     }
 
     if (this._isDragging) {
+      // disable vertical scrolling in scroll view
+      this.scrollView.__enableScrollY = false;
+
       buttonsWidth = this._currentDrag.buttonsWidth;
 
       // Grab the new X point, capping it at zero
@@ -542,11 +546,10 @@
 
       // Or check if this is a swipe to the side drag
       else if (!this._didDragUpOrDown && (e.gesture.direction == 'left' || e.gesture.direction == 'right') && Math.abs(e.gesture.deltaX) > 5) {
-
         // Make sure this is an item with buttons
         item = this._getItem(e.target);
         if (item && item.querySelector('.item-options')) {
-          this._dragOp = new SlideDrag({ el: this.el, canSwipe: this.canSwipe });
+          this._dragOp = new SlideDrag({ el: this.el, canSwipe: this.canSwipe, scrollView: this.scrollView });
           this._dragOp.start(e);
           e.preventDefault();
         }
