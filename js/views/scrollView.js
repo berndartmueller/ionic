@@ -1712,7 +1712,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
     }
 
     var self = this;
-
+    
     // Ignore event when tracking is not enabled (event might be outside of element)
     if (!self.__isTracking) {
       return;
